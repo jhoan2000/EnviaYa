@@ -1,8 +1,12 @@
 from fastapi import FastAPI
-from api import usuarios, domiciliarios, auth
+
+from api.usuario import router as usuario_router
 
 app = FastAPI()
 
-app.include_router(usuarios.router)
-app.include_router(domiciliarios.router)
-app.include_router(auth.router)
+app.include_router(usuario_router)
+
+
+@app.get("/")
+def home():
+    return {"mensaje": "API EnviaYa"}
