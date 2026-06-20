@@ -6,7 +6,6 @@ app = FastAPI()
 
 app.include_router(usuario_router)
 
-
 @app.get("/")
 def home():
-    return {"mensaje": "API EnviaYa"}
+    return {"mensaje": "Hola"}
