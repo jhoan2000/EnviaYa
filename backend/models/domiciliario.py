@@ -1,7 +1,24 @@
-from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.sql import func
 
-class DomiciliarioCreate(BaseModel):
-    nombre: str
-    telefono: str
-    vehiculo: str
-    estado: str
+from database.base import Base
+
+
+class Domiciliario(Base):
+    __tablename__ = "domiciliarios"
+
+    id = Column(Integer, primary_key=True)
+
+    nombre = Column(String(100), nullable=False)
+
+    telefono = Column(String(20), nullable=False)
+
+    correo = Column(String(100), unique=True, nullable=False)
+
+    password_hash = Column(String(255), nullable=False)
+
+    vehiculo = Column(String(50))
+
+    activo = Column(Boolean, default=True)
+
+    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())

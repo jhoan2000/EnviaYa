@@ -1,6 +1,24 @@
-from pydantic import BaseModel, EmailStr
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.sql import func
 
-class UsuarioCreate(BaseModel):
-    nombre: str
-    correo: EmailStr
-    password: str
+from database.base import Base
+
+
+class Usuario(Base):
+    __tablename__ = "usuarios"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    nombre = Column(String(100), nullable=False)
+
+    telefono = Column(String(20), nullable=False)
+
+    correo = Column(String(100), unique=True, nullable=False)
+
+    password_hash = Column(String(255), nullable=False)
+
+    direccion_principal = Column(String(255))
+
+    activo = Column(Boolean, default=True)
+
+    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
