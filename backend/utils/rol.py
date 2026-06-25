@@ -1,0 +1,3 @@
+class RolUsuario:
+    CLIENTE = "CLIENTE"
+    DOMICILIARIO = "DOMICILIARIO"

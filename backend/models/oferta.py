@@ -3,6 +3,9 @@ from sqlalchemy.sql import func
 
 from database.base import Base
 
+from utils.estados import EstadoOferta
+
+
 class Oferta(Base):
 
     __tablename__ = "ofertas"
@@ -33,7 +36,7 @@ class Oferta(Base):
 
     estado = Column(
         String(20),
-        default="PENDIENTE"
+        default=EstadoOferta.PENDIENTE
     )
 
     fecha_creacion = Column(
