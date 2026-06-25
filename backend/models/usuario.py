@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
 
+from sqlalchemy.orm import relationship
+
 from database.base import Base
 
 
@@ -22,3 +24,9 @@ class Usuario(Base):
     activo = Column(Boolean, default=True)
 
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
+    rol = Column(String(20), nullable=False, default="cliente")
+    perfil_domiciliario = relationship(
+    "Domiciliario",
+    uselist=False
+)
+    

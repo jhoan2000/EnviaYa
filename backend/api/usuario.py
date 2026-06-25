@@ -74,3 +74,17 @@ def actualizar_usuario(
         usuario_id,
         datos
     )
+
+@router.delete(
+    "/{usuario_id}",
+    response_model=UsuarioResponse
+)
+def desactivar_usuario(
+    usuario_id: int,
+    db: Session = Depends(get_db)
+):
+
+    return UsuarioService.desactivar_usuario(
+        db,
+        usuario_id
+    )

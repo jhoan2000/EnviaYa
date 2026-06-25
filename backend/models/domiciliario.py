@@ -1,24 +1,60 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import ( Column,
+    Integer,
+    String,
+    Float,
+    Boolean,
+    ForeignKey,
+    DateTime
+)
 from sqlalchemy.sql import func
+
+from sqlalchemy.orm import relationship
 
 from database.base import Base
 
 
 class Domiciliario(Base):
+
     __tablename__ = "domiciliarios"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
-    nombre = Column(String(100), nullable=False)
+    usuario_id = Column(
+        Integer,
+        ForeignKey("usuarios.id"),
+        nullable=False,
+        unique=True
+    )
 
-    telefono = Column(String(20), nullable=False)
+    vehiculo = Column(
+        String(50),
+        nullable=False
+    )
 
-    correo = Column(String(100), unique=True, nullable=False)
+    placa = Column(
+        String(20),
+        nullable=True
+    )
 
-    password_hash = Column(String(255), nullable=False)
+    disponible = Column(
+        Boolean,
+        default=True
+    )
 
-    vehiculo = Column(String(50))
+    calificacion_promedio = Column(
+        Float,
+        default=0
+    )
 
-    activo = Column(Boolean, default=True)
+    cantidad_servicios = Column(
+        Integer,
+        default=0
+    )
 
-    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
+    usuario = relationship(
+        "Usuario"
+    )

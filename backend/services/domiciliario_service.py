@@ -1,12 +1,41 @@
-domiciliarios = []
+from models.domiciliario import Domiciliario
+from models.usuario import Usuario
 
-def crear_domiciliario(domiciliario):
-    domiciliarios.append(domiciliario)
-    return domiciliario
+from fastapi import HTTPException
 
 
-def login_usuario(correo, password):
-    for d in domiciliarios:
-        if d.correo == correo and d.password == password:
-            return d
-    return None
+class DomiciliarioService:
+
+    @staticmethod
+    def crear_domiciliario(
+        db,
+        datos
+    ):
+
+        usuario = (
+            db.query(Usuario)
+            .filter(
+                Usuario.id == datos.usuario_id
+            )
+            .first()
+        )
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuario no encontrado"
+            )
+
+        domiciliario = Domiciliario(
+            usuario_id=datos.usuario_id,
+            vehiculo=datos.vehiculo,
+            placa=datos.placa
+        )
+
+        db.add(domiciliario)
+
+        db.commit()
+
+        db.refresh(domiciliario)
+
+        return domiciliario

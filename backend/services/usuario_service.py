@@ -34,14 +34,19 @@ class UsuarioService:
     @staticmethod
     def listar_usuarios(db: Session):
 
-        return db.query(Usuario).all()
+        return (
+        db.query(Usuario)
+        .filter(Usuario.activo == True)
+        .all()
+    )
     
     @staticmethod
     def obtener_usuario(db, usuario_id: int):
 
         usuario = (
             db.query(Usuario)
-            .filter(Usuario.id == usuario_id)
+            .filter(Usuario.id == usuario_id,
+                    Usuario.activo == True)
             .first()
         )
 
@@ -80,6 +85,31 @@ class UsuarioService:
 
         if datos.direccion_principal is not None:
             usuario.direccion_principal = datos.direccion_principal
+
+        db.commit()
+        db.refresh(usuario)
+
+        return usuario
+    
+    @staticmethod
+    def desactivar_usuario(
+        db,
+        usuario_id: int
+    ):
+
+        usuario = (
+            db.query(Usuario)
+            .filter(Usuario.id == usuario_id)
+            .first()
+        )
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuario no encontrado"
+            )
+
+        usuario.activo = False
 
         db.commit()
         db.refresh(usuario)
