@@ -25,6 +25,24 @@ class DomiciliarioService:
                 status_code=404,
                 detail="Usuario no encontrado"
             )
+        if usuario.rol != "domiciliario":
+            raise HTTPException(
+                status_code=400,
+                detail="El usuario no tiene rol domiciliario"
+            )
+        domiciliario_existente = (
+            db.query(Domiciliario)
+            .filter(
+                Domiciliario.usuario_id == datos.usuario_id
+            )
+            .first()
+        )
+
+        if domiciliario_existente:
+            raise HTTPException(
+                status_code=400,
+                detail="El usuario ya tiene perfil de domiciliario"
+            )
 
         domiciliario = Domiciliario(
             usuario_id=datos.usuario_id,
