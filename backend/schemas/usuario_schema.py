@@ -8,6 +8,7 @@ class UsuarioCreate(BaseModel):
     correo: EmailStr
     password: str
     direccion_principal: Optional[str] = None
+    rol: str
 
 class UsuarioResponse(BaseModel):
     id: int
@@ -16,7 +17,8 @@ class UsuarioResponse(BaseModel):
     correo: str
     direccion_principal: str | None
     activo: bool
-
+    rol: str
+    
     class Config:
         from_attributes = True
 
@@ -25,3 +27,4 @@ class UsuarioUpdate(BaseModel):
     nombre: str | None = None
     telefono: str | None = None
     direccion_principal: str | None = None
+    rol: str | None = None

@@ -55,6 +55,6 @@ class Domiciliario(Base):
         default=0
     )
 
-    usuario = relationship(
+    """ usuario = relationship(
         "Usuario"
-    )
+    ) """

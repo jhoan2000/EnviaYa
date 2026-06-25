@@ -20,8 +20,9 @@ class UsuarioService:
             telefono=usuario.telefono,
             correo=usuario.correo,
             password_hash=usuario.password,  # temporal
-            direccion_principal=usuario.direccion_principal
-        )
+            direccion_principal=usuario.direccion_principal,
+            rol=usuario.rol
+        )   
 
         db.add(nuevo_usuario)
 
@@ -63,6 +64,7 @@ class UsuarioService:
         db,
         usuario_id: int,
         datos: UsuarioUpdate
+        
     ):
 
         usuario = (
@@ -85,6 +87,9 @@ class UsuarioService:
 
         if datos.direccion_principal is not None:
             usuario.direccion_principal = datos.direccion_principal
+        
+        if datos.rol is not None:
+            usuario.rol = datos.rol
 
         db.commit()
         db.refresh(usuario)
