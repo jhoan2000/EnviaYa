@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 
 from database.base import Base
 
+from utils.rol import RolUsuario
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -24,7 +25,7 @@ class Usuario(Base):
     activo = Column(Boolean, default=True)
 
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
-    rol = Column(String(20), nullable=False, default="cliente")
+    rol = Column(String(20), nullable=False, default=RolUsuario.CLIENTE)
     """ perfil_domiciliario = relationship(
     "Domiciliario",
     uselist=False
