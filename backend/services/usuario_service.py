@@ -1,7 +1,14 @@
 from sqlalchemy.orm import Session
 from models.usuario import Usuario
 from schemas import usuario_schema
+from fastapi import HTTPException
 
+from schemas.usuario_schema import (
+    UsuarioCreate,
+    UsuarioUpdate
+)
+
+from fastapi import HTTPException
 
 class UsuarioService:
 
@@ -28,3 +35,53 @@ class UsuarioService:
     def listar_usuarios(db: Session):
 
         return db.query(Usuario).all()
+    
+    @staticmethod
+    def obtener_usuario(db, usuario_id: int):
+
+        usuario = (
+            db.query(Usuario)
+            .filter(Usuario.id == usuario_id)
+            .first()
+        )
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuario no encontrado"
+            )
+
+        return usuario
+    
+    @staticmethod
+    def actualizar_usuario(
+        db,
+        usuario_id: int,
+        datos: UsuarioUpdate
+    ):
+
+        usuario = (
+            db.query(Usuario)
+            .filter(Usuario.id == usuario_id)
+            .first()
+        )
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuario no encontrado"
+            )
+
+        if datos.nombre is not None:
+            usuario.nombre = datos.nombre
+
+        if datos.telefono is not None:
+            usuario.telefono = datos.telefono
+
+        if datos.direccion_principal is not None:
+            usuario.direccion_principal = datos.direccion_principal
+
+        db.commit()
+        db.refresh(usuario)
+
+        return usuario
