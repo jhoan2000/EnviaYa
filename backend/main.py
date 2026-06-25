@@ -11,7 +11,9 @@ from api.usuario import router as usuario_router
 
 from api.domiciliario import router as domiciliario_router
 
-from api.domiciliario import router as solicitud_router
+from api.solicitud import router as solicitud_router
+
+from api.oferta import router as oferta_router
 
 app = FastAPI()
 
@@ -20,6 +22,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(usuario_router)
 app.include_router(domiciliario_router)
 app.include_router(solicitud_router)
+app.include_router(oferta_router)
 
 @app.get("/")
 def home():
