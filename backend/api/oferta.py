@@ -35,3 +35,17 @@ def crear_oferta(
         db,
         datos
     )
+
+# Cremos en enpoint solicitud oferta
+@router.put(
+    "/{oferta_id}/aceptar",
+    response_model=OfertaResponse
+)
+def aceptar_oferta(
+    oferta_id: int,
+    db: Session = Depends(get_db)
+):
+    return OfertaService.aceptar_oferta(
+        db,
+        oferta_id
+    )

@@ -3,6 +3,8 @@ from models.usuario import Usuario
 
 from fastapi import HTTPException
 
+from utils.validaciones import obtener_usuario, obtener_domiciliario
+from utils.permisos import validar_domiciliario
 
 class DomiciliarioService:
 
@@ -11,38 +13,12 @@ class DomiciliarioService:
         db,
         datos
     ):
-
-        usuario = (
-            db.query(Usuario)
-            .filter(
-                Usuario.id == datos.usuario_id
-            )
-            .first()
+        usuario = obtener_usuario(
+            db,
+            datos.usuario_id
         )
 
-        if not usuario:
-            raise HTTPException(
-                status_code=404,
-                detail="Usuario no encontrado"
-            )
-        if usuario.rol != "domiciliario":
-            raise HTTPException(
-                status_code=400,
-                detail="El usuario no tiene rol domiciliario"
-            )
-        domiciliario_existente = (
-            db.query(Domiciliario)
-            .filter(
-                Domiciliario.usuario_id == datos.usuario_id
-            )
-            .first()
-        )
-
-        if domiciliario_existente:
-            raise HTTPException(
-                status_code=400,
-                detail="El usuario ya tiene perfil de domiciliario"
-            )
+        validar_domiciliario(usuario)
 
         domiciliario = Domiciliario(
             usuario_id=datos.usuario_id,

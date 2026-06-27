@@ -19,6 +19,12 @@ class Solicitud(Base):
         nullable=False
     )
 
+    domiciliario_id = Column(
+    Integer,
+    ForeignKey("domiciliarios.id"),
+    nullable=True
+)
+
     origen = Column(
         String(255),
         nullable=False

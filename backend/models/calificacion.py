@@ -3,7 +3,8 @@ from sqlalchemy import (
     Integer,
     ForeignKey,
     Text,
-    DateTime
+    DateTime,
+    Boolean
 )
 
 from sqlalchemy.sql import func
@@ -47,6 +48,11 @@ class Calificacion(Base):
         Text,
         nullable=True
     )
+    calificacion_pendiente = Column(
+        Boolean,
+        default=True,
+        nullable=False
+        )
 
     fecha = Column(
         DateTime(timezone=True),

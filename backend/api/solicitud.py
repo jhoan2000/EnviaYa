@@ -35,3 +35,15 @@ def crear_solicitud(
         db,
         datos
     )
+
+@router.put(
+    "/{solicitud_id}/iniciar",
+    response_model=SolicitudResponse
+)
+def iniciar_servicio(
+    solicitud_id: int,
+    db: Session = Depends(get_db)
+):
+    return SolicitudService.iniciar_servicio(
+        db,solicitud_id
+    )

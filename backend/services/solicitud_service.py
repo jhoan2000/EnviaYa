@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from models.usuario import Usuario
 from models.solicitud import Solicitud
 
-
+from utils.estados import *
 class SolicitudService:
 
     @staticmethod
@@ -34,6 +34,39 @@ class SolicitudService:
         )
 
         db.add(solicitud)
+
+        db.commit()
+
+        db.refresh(solicitud)
+
+        return solicitud
+    @staticmethod
+    def iniciar_servicio(
+        db,
+        solicitud_id
+    ):
+
+        solicitud = (
+            db.query(Solicitud)
+            .filter(
+                Solicitud.id == solicitud_id
+            )
+            .first()
+        )
+
+        if not solicitud:
+            raise HTTPException(
+                status_code=404,
+                detail="Solicitud no encontrada"
+            )
+
+        if solicitud.estado != EstadoSolicitud.ACEPTADA:
+            raise HTTPException(
+                status_code=400,
+                detail="La solicitud no puede iniciarse."
+            )
+
+        solicitud.estado = EstadoSolicitud.EN_CURSO
 
         db.commit()
 
