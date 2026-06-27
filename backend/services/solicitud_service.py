@@ -4,6 +4,14 @@ from models.usuario import Usuario
 from models.solicitud import Solicitud
 
 from utils.estados import *
+from utils.estados import EstadoOferta, EstadoSolicitud
+from utils.validaciones import (
+    obtener_solicitud,)
+from utils.permisos import (
+    validar_solicitud_aceptada,
+    validar_solicitud_en_curso,
+    validar_domiciliario_asignado)
+
 class SolicitudService:
 
     @staticmethod
@@ -43,28 +51,20 @@ class SolicitudService:
     @staticmethod
     def iniciar_servicio(
         db,
-        solicitud_id
+        solicitud_id,
+        domiciliario_id
     ):
 
-        solicitud = (
-            db.query(Solicitud)
-            .filter(
-                Solicitud.id == solicitud_id
-            )
-            .first()
+        solicitud = obtener_solicitud(
+            db,
+            solicitud_id,
         )
 
-        if not solicitud:
-            raise HTTPException(
-                status_code=404,
-                detail="Solicitud no encontrada"
-            )
+        validar_solicitud_aceptada(solicitud)
 
-        if solicitud.estado != EstadoSolicitud.ACEPTADA:
-            raise HTTPException(
-                status_code=400,
-                detail="La solicitud no puede iniciarse."
-            )
+        validar_domiciliario_asignado(
+            solicitud,
+            domiciliario_id)
 
         solicitud.estado = EstadoSolicitud.EN_CURSO
 
@@ -73,3 +73,17 @@ class SolicitudService:
         db.refresh(solicitud)
 
         return solicitud
+    @staticmethod
+    def finalizar_servicio(
+        db,
+        solicitud_id,
+        domiciliario_id
+    ):
+        solicitud = obtener_solicitud(
+            db,
+            solicitud_id
+        )
+
+        validar_solicitud_en_curso(
+            
+        )

@@ -42,8 +42,26 @@ def crear_solicitud(
 )
 def iniciar_servicio(
     solicitud_id: int,
+    domiciliario_id: int,
     db: Session = Depends(get_db)
 ):
     return SolicitudService.iniciar_servicio(
-        db,solicitud_id
+        db,
+        solicitud_id,
+        domiciliario_id
+    )
+
+@router.put(
+    "/{solicitud_id}/finalizar",
+    response_model=SolicitudResponse
+)
+def finalizar_servicio(
+    solicitud_id: int,
+    domiciliario_id: int,
+    db: Session = Depends(get_db)
+):
+    return SolicitudService.finalizar_servicio(
+        db,
+        solicitud_id,
+        domiciliario_id
     )
