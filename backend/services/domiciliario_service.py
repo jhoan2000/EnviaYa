@@ -1,11 +1,8 @@
 from models.domiciliario import Domiciliario
-from models.usuario import Usuario
 
-from fastapi import HTTPException
-
-from utils.validaciones import obtener_usuario, obtener_domiciliario
+from utils.validaciones import obtener_usuario, validar_perfil_domiciliario
 from utils.permisos import validar_domiciliario
-
+from services.solicitud_service import SolicitudService
 class DomiciliarioService:
 
     @staticmethod
@@ -20,6 +17,10 @@ class DomiciliarioService:
 
         validar_domiciliario(usuario)
 
+        validar_perfil_domiciliario(
+            db,
+            datos.usuario_id)
+
         domiciliario = Domiciliario(
             usuario_id=datos.usuario_id,
             vehiculo=datos.vehiculo,
@@ -33,3 +34,4 @@ class DomiciliarioService:
         db.refresh(domiciliario)
 
         return domiciliario
+    

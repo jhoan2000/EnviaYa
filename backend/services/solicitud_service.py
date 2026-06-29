@@ -6,7 +6,8 @@ from models.solicitud import Solicitud
 from utils.estados import *
 from utils.estados import EstadoOferta, EstadoSolicitud
 from utils.validaciones import (
-    obtener_solicitud,)
+    obtener_solicitud,
+    obtener_domiciliario)
 from utils.permisos import (
     validar_solicitud_aceptada,
     validar_solicitud_en_curso,
@@ -85,5 +86,25 @@ class SolicitudService:
         )
 
         validar_solicitud_en_curso(
-            
+            solicitud
         )
+
+        validar_domiciliario_asignado(
+            solicitud,
+            domiciliario_id
+        )
+
+        domiciliario = obtener_domiciliario(
+            db,
+            domiciliario
+        )
+
+        solicitud.estado = EstadoSolicitud.FINALIZADA
+
+        domiciliario.disponible = True
+
+        db.commit()
+        db.refresh(solicitud)
+
+        return solicitud
+    

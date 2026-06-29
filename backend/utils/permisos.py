@@ -61,6 +61,15 @@ def validar_solicitud_aceptada(solicitud):
             detail="La solicitud no está aceptada."
         )
 
+def validar_solicitud_en_curso(solicitud):
+
+    if solicitud.estado != EstadoSolicitud.EN_CURSO:
+
+        raise HTTPException(
+            status_code=400,
+            detail="La solicitud no está en curso."
+        )
+
 # Oferta    
 def validar_oferta_pendiente(oferta):
 
@@ -70,3 +79,5 @@ def validar_oferta_pendiente(oferta):
             status_code=400,
             detail="La oferta ya fue procesada."
         )
+    
+    

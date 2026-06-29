@@ -5,8 +5,15 @@ from models.solicitud import Solicitud
 from models.domiciliario import Domiciliario
 
 from utils.estados import EstadoOferta, EstadoSolicitud
-from utils.validaciones import obtener_solicitud, obtener_domiciliario
-from utils.permisos import validar_solicitud_abierta, validar_domiciliario_disponible
+from utils.validaciones import (
+    obtener_solicitud,
+    obtener_domiciliario,
+    obtener_oferta)
+from utils.permisos import (
+    validar_solicitud_abierta,
+    validar_domiciliario_disponible,
+    validar_oferta_pendiente,
+    validar_solicitud_aceptada)
 class OfertaService:
 
     @staticmethod
@@ -45,36 +52,26 @@ class OfertaService:
         oferta_id
     ):
         
-        oferta = (
-            db.query(Oferta)
-            .filter(Oferta.id == oferta_id)
-            .first()
+        oferta = obtener_oferta(db, oferta_id)
+        
+        validar_oferta_pendiente(oferta)
+        
+        solicitud = obtener_solicitud(
+            db,
+            oferta.solicitud_id
         )
+        
+        validar_solicitud_abierta(solicitud)
 
-        if not oferta:
-            raise HTTPException(
-                status_code=404,
-                detail="Oferta no encontrada"
-            )
-
-        if oferta.estado != EstadoOferta.PENDIENTE:
-            raise HTTPException(
-                status_code=400,
-                detail="La oferta ya fue procesada."
-            )
-
-        solicitud = (
-            db.query(Solicitud)
-            .filter(
-                Solicitud.id == oferta.solicitud_id
-            )
-            .first()
+        domiciliario = obtener_domiciliario(
+            db,
+            oferta.domiciliario_id
         )
-
         oferta.estado = EstadoOferta.ACEPTADA
-
         solicitud.estado = EstadoSolicitud.ACEPTADA
-
+        solicitud.domiciliario_id = oferta.domiciliario_id
+        domiciliario.disponible = False
+         
         otras_ofertas = (
             db.query(Oferta)
             .filter(
