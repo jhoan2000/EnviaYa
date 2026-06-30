@@ -17,10 +17,10 @@ class EstadoOferta:
 
 class EstadoDomiciliario:
 
-    DISPONIBLE = "disponible"
+    DISPONIBLE = "DISPONIBLE"
 
-    EN_SERVICIO = "en_servicio"
+    EN_SERVICIO = "EN_SERVICIO"
 
-    DESCONECTADO = "desconectado"
+    DESCONECTADO = "DESCONECTADO"
 
-    SUSPENDIDO = "suspendido"
+    SUSPENDIDO = "SUSPENDIDO"

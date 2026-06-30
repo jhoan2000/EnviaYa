@@ -1,4 +1,3 @@
-
 from fastapi import HTTPException
 
 from models.usuario import Usuario
